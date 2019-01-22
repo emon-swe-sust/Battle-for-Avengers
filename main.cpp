@@ -1,3 +1,4 @@
+
 #include<bits/stdc++.h>
 #include"SFML\Graphics.hpp"
 #include"SFML\Window.hpp"
@@ -156,7 +157,7 @@ int main()
 
     hero.rotate(270.f);
 
-    Text scoretxt,gameovertxt,lifetxt,mgzntxt,welcometxt,gametxt,newgametxt,highscoretxt,stagetxt,helptxt,exittxt,loadgametxt,st1,st2,st3;
+    Text scoretxt,gameovertxt,lifetxt,mgzntxt,welcometxt,gametxt,newgametxt,highscoretxt,stagetxt,helptxt,exittxt,loadgametxt,st1,st2,st3,insta,insta1,insta2;
 
     gametxt.setFont(style);
     gametxt.setString("Battle For Avenger!");
@@ -228,6 +229,27 @@ int main()
     welcometxt.setScale(2.0f,2.0f);
     welcometxt.setString("Congratulation !");
 
+    insta.setFont(font);
+    insta.setCharacterSize(20);
+    insta.setFillColor(Color::Black);
+    insta.setPosition(10.f,200);
+    insta.setScale(1.5f,1.5f);
+    insta.setString("Press 'Space' Button for bullet,Remember there are limited number of Bullet.");
+
+    insta1.setFont(font);
+    insta1.setCharacterSize(20);
+    insta1.setFillColor(Color::Red);
+    insta1.setPosition(800.f,700);
+    insta1.setScale(1.5f,1.5f);
+    insta1.setString("Press 'Escape' for continue");
+
+    insta2.setFont(font);
+    insta2.setCharacterSize(20);
+    insta2.setFillColor(Color::Black);
+    insta2.setPosition(10.f,300);
+    insta2.setScale(1.5f,1.5f);
+    insta2.setString(" Use arrow keys for avoiding collision else you will lose your life!");
+
     st1.setFont(schng);
     st1.setString("Stage: 1");
 
@@ -238,7 +260,7 @@ int main()
     st3.setString("Stage: 3");
 
     bool stage1=true,stage2=true,stage3=true,menu=true,me=true,level1=true,level2=false,level3=false,agunbool1=false,blll2=false,agunbool2=false,blll1=false,agunbool=false,blll=false,stages=false
-    ,dekha = false,up=false,down=false;
+    ,dekha = false,up=false,down=false,hlp=false;
 
     //Player init
     int score = 0,mgzn=100,k=0,l,score1=0,score2=0,score3=0,jan=10,le=1,ve=1,left1=0,right1=1,left2=1,right2=0;
@@ -394,6 +416,12 @@ int main()
                     stages=true;
 
                 }
+                else if(menuselect%5 == 4)
+                {
+                    hlp=true;
+                    menu=false;
+
+                }
                 else if(menuselect%5==0)
                 {
                     window.close();
@@ -476,6 +504,21 @@ int main()
             window.draw(helptxt);
             window.draw(exittxt);
             window.display();
+        }
+
+        if(hlp)
+        {
+            window.clear(Color::White);
+            window.draw(insta);
+            window.draw(insta1);
+            window.draw(insta2);
+            window.display();
+            if(Keyboard::isKeyPressed(Keyboard::Escape))
+            {
+                hlp=false;
+                menu=true;
+                me=true;
+            }
         }
 
         if(stages)
@@ -584,7 +627,7 @@ int main()
         }
 
         ///gameloop
-        if((life>0 && (level1 || level2 || level3 ) && !menu) || dekha)
+        if((life>0 && (level1 || level2 || level3 ) && !menu && !hlp) || dekha)
         {
             ///stage1
             if(level1)

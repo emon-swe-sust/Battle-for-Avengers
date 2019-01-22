@@ -73,14 +73,14 @@ int main()
     style1.loadFromFile("Fonts/font6.TTF");
     schng.loadFromFile("Fonts/font3.TTF");
 
-    Texture stark,thor,spider,halk,thanos,boma,bullet1,bullet2,bullet3,bullet4,stone,space1,mbg,space2,space3,Fire,step1,step2,step3,step4,stg;
+    Texture stark,thor,pathr,spider,bos,halk,thanos,boma,bullet1,bullet2,bullet3,bullet4,stone,space1,mbg,space2,space3,Fire,step1,step2,step3,step4,stg,lovee,pri;
 
     Color barr(252, 13, 13), notSelected(51, 255, 51),done(255,255,0), beat(200, 20, 20), dev(255, 255, 255, 100),Spark;
 
     SoundBuffer bullettune,crashtune,coll,button,button1;
 
-    Clock key,agun,schange,agun1,agun2;
-    float time=0.0f,aguntime=0.0f,stchange=0.0f,aguntime1=0.0f,aguntime2=0.0f;
+    Clock key,agun,schange,agun1,agun2,loove,prii;
+    float time=0.0f,aguntime=0.0f,stchange=0.0f,aguntime1=0.0f,aguntime2=0.0f,lve=0.0f,pr=0.0f;
 
     Music gamemusic,menumusic;
     gamemusic.openFromFile("Music/game.wav");
@@ -114,12 +114,18 @@ int main()
     step4.loadFromFile("Textures/step4.png");
     stg.loadFromFile("Textures/75665.jpg");
     boma.loadFromFile("Textures/stone1.png");
+    lovee.loadFromFile("Textures/love.png");
+    pri.loadFromFile("Textures/guldi.png");
+    pathr.loadFromFile("Textures/pathor.png");
+    bos.loadFromFile("Textures/bos.png");
+
 
     Sound fire(bullettune),crash(crashtune),collision(coll),menubutton(button1),menuok(button);
 
     Sprite bg1(space1),bg2(space1),menubg(mbg),Stark(stark),Thanos(thanos),Thor(thor),Thor1(thor),Thor2(thor),Hulk(halk),bg3(space2),bg4(space2),bg5(space3),bg6(space3)
     ,lbg1(space2),lbg2(space2),lbg3(space3),lbg4(space3),menupic1(space1),menupic2(space2),menupic3(space3),spark(Fire),ep1(step1),ep2(step2),ep3(step3),ep4(step4),
-    Step1(step1),Step2(step2),Step3(step3),Step4(step4),spchange(stg),sbg1(space1),sbg2(space2),sbg3(space3),guli(bullet2),tep1(step1),tep2(step2),tep3(step3),tep4(step4);
+    Step1(step1),Step2(step2),Step3(step3),Step4(step4),spchange(stg),sbg1(space1),sbg2(space2),sbg3(space3),guli(bullet2),tep1(step1),tep2(step2),tep3(step3),tep4(step4)
+    ,love(lovee),prize(pri),hero(thor),vilen(thanos);
 
     Step1.setScale(0.3f,0.3f);
     Step2.setScale(0.3f,0.3f);
@@ -143,8 +149,14 @@ int main()
     spchange.setScale(0.92f,0.7);
     spchange.setPosition(0.0f,0.0f);
     guli.setScale(0.04,0.04);
+    love.setScale(0.25,0.25);
+    prize.setScale(0.1,0.1);
+    hero.setScale(0.05,0.05);
+    vilen.setScale(0.18,0.18);
 
-    Text scoretxt,gameovertxt,lifetxt,mgzntxt,gametxt,newgametxt,highscoretxt,stagetxt,helptxt,exittxt,loadgametxt,st1,st2,st3;
+    hero.rotate(270.f);
+
+    Text scoretxt,gameovertxt,lifetxt,mgzntxt,welcometxt,gametxt,newgametxt,highscoretxt,stagetxt,helptxt,exittxt,loadgametxt,st1,st2,st3;
 
     gametxt.setFont(style);
     gametxt.setString("Battle For Avenger!");
@@ -205,8 +217,16 @@ int main()
     gameovertxt.setFont(font);
     gameovertxt.setCharacterSize(30);
     gameovertxt.setFillColor(Color::Red);
-    gameovertxt.setPosition(100.f, window.getSize().y / 2);
+    gameovertxt.setPosition(400.f, window.getSize().y / 2-80);
+    gameovertxt.setScale(2.5f,2.5f);
     gameovertxt.setString("GAME OVER!");
+
+    welcometxt.setFont(font);
+    welcometxt.setCharacterSize(30);
+    welcometxt.setFillColor(Color::Green);
+    welcometxt.setPosition(400.f, window.getSize().y / 2+100);
+    welcometxt.setScale(2.0f,2.0f);
+    welcometxt.setString("Congratulation !");
 
     st1.setFont(schng);
     st1.setString("Stage: 1");
@@ -217,23 +237,27 @@ int main()
     st3.setFont(schng);
     st3.setString("Stage: 3");
 
-    bool stage1=true,stage2=true,stage3=true,menu=true,me=true,level1=true,level2=false,level3=false,agunbool1=false,blll2=false,agunbool2=false,blll1=false,agunbool=false,blll=false,stages=false;
+    bool stage1=true,stage2=true,stage3=true,menu=true,me=true,level1=true,level2=false,level3=false,agunbool1=false,blll2=false,agunbool2=false,blll1=false,agunbool=false,blll=false,stages=false
+    ,dekha = false,up=false,down=false;
 
     //Player init
-    int score = 0,mgzn=100,k=0,l,score1=0,score2=0,score3=0,le=1,ve=1,left1=0,right1=1,left2=1,right2=0;
-    Player player(&halk),player1(&thanos);
+    int score = 0,mgzn=100,k=0,l,score1=0,score2=0,score3=0,jan=10,le=1,ve=1,left1=0,right1=1,left2=1,right2=0;
+    Player player(&halk),player1(&stark),player2(&stark);
     player.shape.setScale(0.07f,0.07f);
-    player1.shape.setScale(0.18f,0.18f);
-    int shootTimer = 20;
+    player1.shape.setScale(0.05f,0.05f);
+    int shootTimer = 20,vtime=0;
 
     RectangleShape bar(Vector2f(window.getSize().x+50,100));
     bar.setFillColor(Color::White);
     bar.setPosition(window.getPosition().x/2-155,window.getSize().y-50);
 
     //Enemy init
-    int enemySpawnTimer = 0,life=10,bala=10;
+    int enemySpawnTimer = 0,life=10,bala=10,dekhi=0;
     std::vector<Enemy> enemies;
     std::vector<faw> enemy;
+    std::vector<Bullet1> goli;
+    std::vector<Bullet1> pathor;
+    std::vector<Bullet1> boss;
 
     unsigned menuselect = 1,sou=1,pran1=10,pran2=10;
 
@@ -254,6 +278,9 @@ int main()
             {
                 menumusic.play();
                 menumusic.setLoop(true);
+                dekhi = 0;
+                jan=20;
+                dekha=false;
 
                 Thanos.setRotation(55.f);
                 Thanos.setScale(0.25f,0.25f);
@@ -323,6 +350,8 @@ int main()
                         else
                             level3=true;
                     }
+                    else
+                        ve=0;
                     gamemusic.setLoop(true);
                     menu = false;
                 }
@@ -339,6 +368,18 @@ int main()
                         else
                             level3=true;
                     }
+                    else
+                        ve=0;
+                    if(Keyboard::isKeyPressed(Keyboard::Escape))
+                        {
+                            gamemusic.stop();
+                            menumusic.play();
+                            menumusic.setLoop(true);
+                            menu=true;
+                            stages=false;
+                            me=true;
+
+                        }
                     gamemusic.setLoop(true);
                     menu= false;
                 }
@@ -543,13 +584,13 @@ int main()
         }
 
         ///gameloop
-        if(life>=0 && (level1 || level2 || level3) && !menu)
+        if((life>0 && (level1 || level2 || level3 ) && !menu) || dekha)
         {
             ///stage1
             if(level1)
             {
                 stchange=schange.getElapsedTime().asSeconds();
-                if(stchange < 5.0)
+                if(stchange < 2.0)
                 {
                     window.clear();
                     window.draw(spchange);
@@ -657,6 +698,7 @@ int main()
                     if (enemySpawnTimer >= 6 && score1 >= 25)
                     {
                         enemies.push_back(Enemy(&stone, window.getSize()));
+                        enemies[enemies.size()-1].shape.setScale(0.4f,0.4f);
                         enemySpawnTimer = 0; //reset timer
                     }
 
@@ -679,7 +721,7 @@ int main()
                             blll=true;
                             break;
                         }
-                        scoretxt.setString("Score: " + std::to_string(score));
+                        scoretxt.setString("Remaining: " + std::to_string(50-score));
                     }
 
                     RectangleShape health(Vector2f(life*20,25));
@@ -747,13 +789,30 @@ int main()
                         if(aguntime > 0.6)
                             agunbool=false;
                     }
-                    if(life<0)
+                    if(life==0 || dekha)
+                    {
+                        window.clear(Color::White);
+                        if(dekhi < 100)
+                        {
+                            life--;
+                            dekha=true;
+                            dekhi++;
+                        }
+                        else
+                        {
+                            dekha = false;
+                            me =true;
+                            menu=true;
+                        }
+
                         window.draw(gameovertxt);
+
+                    }
                     window.display();
-                    if(score1>5)
+                    if(score>49)
                     {
                         score1=0;
-                        life=10;
+                        life=5;
                         mgzn=100;
                         level1=false;
                         level2=true;
@@ -771,6 +830,8 @@ int main()
                     window.clear();
                     window.draw(spchange);
                     st2.setCharacterSize(130);
+                    pran1=20;
+                    pran2=20;
                     st2.setFillColor(Color::White);
                     st2.setPosition(420.f,window.getSize().y/2-90);
                     window.draw(st2);
@@ -781,6 +842,10 @@ int main()
                 {
                     if(stage2)
                     {
+                        loove.restart();
+                        prii.restart();
+                        love.setPosition(200.f,2000.f);
+                        prize.setPosition(200.f,2000.f);
                         gamemusic.play();
                         gamemusic.setLoop(true);
                         bg3.setPosition(0.f,0.f);
@@ -790,9 +855,13 @@ int main()
                         Thor1.setPosition(10.f,25.f);
                         Thor2.setPosition(window.getSize().x-100,25.f);
                         Thor1.setScale(0.05,0.05);
+                        dekha = false;
                         Thor2.setScale(0.05,0.05);
                         stage2 = false;
                     }
+                    lve=loove.getElapsedTime().asSeconds();
+                    pr=prii.getElapsedTime().asSeconds();
+
                     if(Keyboard::isKeyPressed(Keyboard::Left))
                         player1.shape.move(-10.f, 0.f);
                     if(Keyboard::isKeyPressed(Keyboard::Right))
@@ -874,6 +943,8 @@ int main()
                             enemy.erase(enemy.begin()+kl);
                             collision.play();
                             life--;
+                            if(life==0)
+                                dekhi=0;
                             agunbool = true;
                             blll=true;
                         }
@@ -919,7 +990,7 @@ int main()
                         mgzn--;
                         player1.bullets.push_back(Bullet1(&bullet4, player1.shape.getPosition()));
                         player1.bullets[player1.bullets.size()-1].shape.setScale(0.2f,0.2f);
-                        player1.bullets[player1.bullets.size()-1].shape.setPosition(Vector2f(player1.shape.getPosition().x+63,player1.shape.getPosition().y));
+                        player1.bullets[player1.bullets.size()-1].shape.setPosition(Vector2f(player1.shape.getPosition().x+40,player1.shape.getPosition().y));
                         shootTimer = 0; //reset timer
                     }
 
@@ -929,8 +1000,6 @@ int main()
                         gamemusic.stop();
                         menumusic.play();
                         menumusic.setLoop(true);
-                        menu=true;
-                        me=true;
                     }
 
                     for (size_t i = 0; i < player1.bullets.size(); i++)
@@ -966,13 +1035,41 @@ int main()
                     {
                         window.draw(enemy[kl].shape);
                     }
+
+
+                    if(lve>9.0f )
+                    {
+                        love.setPosition(rand() % window.getSize().x,0);
+                        loove.restart();
+                        lve=0.0f;
+                    }
+                    if(pr>10.0f)
+                    {
+                        prize.setPosition(rand() % window.getSize().x,0);
+                        prii.restart();
+                        pr=0.0f;
+                    }
+                    love.move(0.f,10.f);
+                    prize.move(0.f,10.f);
+                    window.draw(prize);
+                    window.draw(love);
                     window.draw(bar);
-                    window.draw(scoretxt);
                     window.draw(lifetxt);
                     window.draw(mgzntxt);
                     window.draw(magazine);
                     window.draw(health);
-
+                    if(love.getGlobalBounds().intersects(player1.shape.getGlobalBounds()))
+                    {
+                        if(life<10 && life >0)
+                        life=life+2;
+                        love.setPosition(200.f,2000.f);
+                    }
+                    if(prize.getGlobalBounds().intersects(player1.shape.getGlobalBounds()))
+                    {
+                        if(mgzn<100)
+                            mgzn=mgzn+10;
+                        prize.setPosition(200.f,2000.f);
+                    }
 
                     for (size_t i = 0; i < player1.bullets.size(); i++)
                         window.draw(player1.bullets[i].shape);
@@ -982,6 +1079,7 @@ int main()
                         agun.restart();
                         blll=false;
                     }
+
                     aguntime=agun.getElapsedTime().asSeconds();
 
                     if(agunbool)
@@ -1047,6 +1145,7 @@ int main()
                     {
                         agun2.restart();
                         blll2=false;
+                        agunbool2=true;
                     }
                     aguntime2=agun2.getElapsedTime().asSeconds();
 
@@ -1077,11 +1176,11 @@ int main()
                     }
 
 
-                    RectangleShape pra1(Vector2f((unsigned)pran1*12,10));
+                    RectangleShape pra1(Vector2f((unsigned)pran1*6,10));
                     pra1.setFillColor(Color::Red);
                     pra1.setPosition((unsigned)Thor1.getPosition().x,(unsigned)Thor1.getPosition().y-13);
 
-                    RectangleShape pra2(Vector2f((unsigned)pran2*12,10));
+                    RectangleShape pra2(Vector2f((unsigned)pran2*6,10));
                     pra2.setFillColor(Color::Red);
                     pra2.setPosition((unsigned)Thor2.getPosition().x,(unsigned)Thor2.getPosition().y-13);
                     if(pran1 > 0)
@@ -1102,13 +1201,28 @@ int main()
                         schange.restart();
                         mgzn=100;
                     }
-                    if(life == 0)
+                    if(life==0 || dekha)
                     {
-                        level2=false;
-                        menu=true;
-                        me=true;
-                    }
+                         window.clear(Color::White);
+                        if(dekhi < 100)
+                        {
+                            life--;
+                            dekha=true;
+                            dekhi++;
+                        }
+                        else
+                        {
+                            dekha = false;
+                            me=true;
+                            menu=true;
+                            gamemusic.stop();
+                            menumusic.play();
+                            menumusic.setLoop(true);
+                        }
 
+                        window.draw(gameovertxt);
+
+                    }
                     window.display();
                 }
 
@@ -1119,7 +1233,7 @@ int main()
             else if(level3)
             {
                 stchange=schange.getElapsedTime().asSeconds();
-                if(stchange < 5.0)
+                if(stchange < 2.0)
                 {
                     window.clear();
                     window.draw(spchange);
@@ -1127,6 +1241,312 @@ int main()
                     st3.setFillColor(Color::White);
                     st3.setPosition(420.f,window.getSize().y/2-90);
                     window.draw(st3);
+                    jan=20;
+                    vilen.setPosition(window.getSize().x-150,300.f);
+                    window.display();
+                    up=true;
+                    blll1=false;
+                    blll=false;
+                    agunbool=false;
+                    bool stage3=true;
+                }
+                else
+                {
+                    if(stage3)
+                    {
+                        gamemusic.play();
+                        gamemusic.setLoop(true);
+                        bg5.setPosition(0.f,-100.f);
+                        hero.setPosition(Vector2f(50,window.getSize().y/2));
+                        mgzn=100;
+                        jan=50;
+                        stage3=false;
+                    }
+
+                    if(Keyboard::isKeyPressed(Keyboard::Left))
+                        hero.move(-10.f, 0.f);
+                    if(Keyboard::isKeyPressed(Keyboard::Right))
+                        hero.move(10.f, 0.f);
+                    if(Keyboard::isKeyPressed(Keyboard::Up))
+                        hero.move(0.f, -10.f);
+                    if(Keyboard::isKeyPressed(Keyboard::Down))
+                        hero.move(0.f, 10.f);
+                    if(Keyboard::isKeyPressed(Keyboard::Escape))
+                    {
+                        gamemusic.stop();
+                        menumusic.play();
+                        menumusic.setLoop(true);
+                        menu=true;
+                        stages=false;
+                        me=true;
+                        level3=false;
+                        le=3;
+                    }
+                    if (hero.getPosition().x <= 0) //Left
+                        hero.setPosition(0.f, hero.getPosition().y);
+                    if (hero.getPosition().x >= window.getSize().x - hero.getGlobalBounds().width) //Right
+                        hero.setPosition(window.getSize().x - hero.getGlobalBounds().width, hero.getPosition().y);
+                    if(hero.getPosition().y<=80)
+                        hero.setPosition(hero.getPosition().x,80.f);
+                    if(hero.getPosition().y >= window.getSize().y-hero.getGlobalBounds().height+30)
+                        hero.setPosition(hero.getPosition().x,window.getSize().y-hero.getGlobalBounds().height+30);
+
+                     if (shootTimer < 15)
+                        shootTimer++;
+
+                    if ((Mouse::isButtonPressed(Mouse::Left)||Keyboard::isKeyPressed(Keyboard::Space)) && shootTimer >= 15 && mgzn > 0) //Shooting
+                    {
+                        fire.play();
+                        mgzn--;
+                        goli.push_back(Bullet1(&bullet3,Vector2f(hero.getPosition().x,hero.getPosition().y)));
+                        goli[goli.size()-1].shape.setScale(0.12f,0.12f);
+                        goli[goli.size()-1].shape.setPosition(Vector2f(hero.getPosition().x+13,hero.getPosition().y-60));
+                        shootTimer = 0; //reset timer
+                    }
+                    for(int bl=0;bl < goli.size();bl++)
+                    {
+                        goli[bl].shape.move(10.f,0.f);
+                        if(goli[bl].shape.getPosition().x > window.getSize().x)
+                            goli.erase(goli.begin()+bl);
+                        if(goli[bl].shape.getGlobalBounds().intersects(vilen.getGlobalBounds()))
+                        {
+                            crash.play();
+                            goli.erase(goli.begin()+bl);
+                            jan--;
+                            blll1=true;
+                            agunbool1=true;
+                        }
+                        for(int kl=0;kl < pathor.size() ; kl++)
+                        {
+                            if(goli[bl].shape.getGlobalBounds().intersects(pathor[kl].shape.getGlobalBounds()))
+                            {
+                                crash.play();
+                                goli.erase(goli.begin()+bl);
+                                pathor.erase(pathor.begin()+kl);
+                            }
+                        }
+                        for(int kl=0; kl<boss.size(); kl++)
+                        {
+                            if(goli[bl].shape.getGlobalBounds().intersects(boss[kl].shape.getGlobalBounds()))
+                            {
+                                crash.play();
+                                goli.erase(goli.begin()+bl);
+                                boss.erase(boss.begin()+kl);
+                            }
+                        }
+                    }
+
+                    if (enemySpawnTimer < 15)
+                        enemySpawnTimer++;
+
+                    if(vtime < 70)
+                        vtime++;
+
+                    if(vtime >=70 )
+                    {
+                        boss.push_back(Bullet1(&bos,Vector2f(0.0,0.0)));
+                        boss[boss.size()-1].shape.setPosition(vilen.getPosition().x,vilen.getPosition().y-10);
+                        boss[boss.size()-1].shape.setScale(0.25,0.25);
+                        vtime=0;
+                    }
+                    for(int bl=0; bl < boss.size(); bl++)
+                    {
+                        boss[bl].shape.move(-15.f,0.f);
+                        if(boss[bl].shape.getPosition().x < -30)
+                            boss.erase(boss.begin()+bl);
+                        if(boss[bl].shape.getGlobalBounds().intersects(hero.getGlobalBounds()))
+                        {
+                            life--;
+                            boss.erase(boss.begin()+bl);
+                            blll=true;
+                            collision.play();
+                            agunbool=true;
+                        }
+
+                    }
+
+                    if (enemySpawnTimer >= 15)
+                    {
+                        pathor.push_back(Bullet1(&pathr, Vector2f(0.0,0.0)));
+                        pathor[pathor.size()-1].shape.setPosition(window.getSize().x , rand() % window.getSize().y);
+                        pathor[pathor.size()-1].shape.setScale(0.3f,0.3f);
+                        enemySpawnTimer = 0; //reset timer
+                    }
+
+                    for(int bl=0; bl < pathor.size(); bl++)
+                    {
+                        pathor[bl].shape.move(-10.f,0.f);
+                        if(pathor[bl].shape.getPosition().x < -30)
+                            pathor.erase(pathor.begin()+bl);
+                        if(pathor[bl].shape.getGlobalBounds().intersects(hero.getGlobalBounds()))
+                        {
+                            life--;
+                            pathor.erase(pathor.begin()+bl);
+                            blll=true;
+                            collision.play();
+                            agunbool=true;
+                        }
+                    }
+
+                    if(up)
+                    {
+                        vilen.move(0,-5.f);
+                        if(vilen.getPosition().y < 40)
+                        {
+                            up=false;
+                            down=true;
+                        }
+                    }
+                    if(down)
+                    {
+                        vilen.move(0.f,5.f);
+                        if(vilen.getPosition().y > window.getSize().y - 180)
+                        {
+                            up=true;
+                            down=false;
+                        }
+                    }
+                    window.clear();
+                    window.draw(bg5);
+
+                    for(int bl=0;bl<goli.size();bl++)
+                        window.draw(goli[bl].shape);
+                    for(int bl=0 ; bl < pathor.size(); bl++)
+                        window.draw(pathor[bl].shape);
+                    for(int bl=0 ; bl < boss.size(); bl++)
+                        window.draw(boss[bl].shape);
+
+                    window.draw(hero);
+
+                    if(blll)
+                    {
+                        agun.restart();
+                        agunbool=true;
+                        blll=false;
+                    }
+                    aguntime=agun.getElapsedTime().asSeconds();
+
+                    if(agunbool)
+                    {
+                        if(aguntime <0.15)
+                        {
+                            Step1.setPosition(hero.getPosition().x,hero.getPosition().y-72);
+                            window.draw(Step1);
+                        }
+                        if(aguntime > 0.15 &&  aguntime <= 0.3)
+                        {
+                            Step2.setPosition(hero.getPosition().x,hero.getPosition().y-72);
+                            window.draw(Step2);
+                        }
+                        if(aguntime > 0.3 &&  aguntime <= 0.45)
+                        {
+                            Step3.setPosition(hero.getPosition().x,hero.getPosition().y-72);
+                            window.draw(Step3);
+                        }
+                        if(aguntime > 0.45 && aguntime <= 0.6)
+                        {
+                            Step4.setPosition(hero.getPosition().x,hero.getPosition().y-72);
+                            window.draw(Step4);
+                        }
+                        if(aguntime > 0.6)
+                            agunbool=false;
+                    }
+
+                    RectangleShape health(Vector2f(life*20,25));
+                    health.setFillColor(Color::Green);
+                    health.setPosition(550,window.getSize().y-35);
+
+                    RectangleShape magazine(Vector2f(mgzn*2,25));
+                    magazine.setFillColor(Color::Red);
+                    magazine.setPosition(1050,window.getSize().y-35);
+
+                    RectangleShape jn(Vector2f((unsigned)jan*2.5,10));
+                    jn.setFillColor(Color::Red);
+                    jn.setPosition((unsigned)vilen.getPosition().x,(unsigned)vilen.getPosition().y-20);
+
+                    window.draw(jn);
+                    window.draw(bar);
+                    window.draw(lifetxt);
+                    window.draw(mgzntxt);
+                    window.draw(magazine);
+                    window.draw(health);
+                    window.draw(vilen);
+                    if(blll1)
+                    {
+                        agun1.restart();
+                        blll1=false;
+                    }
+                    aguntime1=agun1.getElapsedTime().asSeconds();
+
+                    if(agunbool1)
+                    {
+                        if(aguntime1 <0.15)
+                        {
+                            tep1.setPosition(vilen.getPosition().x-11,vilen.getPosition().y+20);
+                            window.draw(tep1);
+                        }
+                        if(aguntime1 > 0.15 &&  aguntime1 <= 0.3)
+                        {
+                            tep2.setPosition(vilen.getPosition().x+11,vilen.getPosition().y+20);
+                            window.draw(tep2);
+                        }
+                        if(aguntime1 > 0.3 &&  aguntime1 <= 0.45)
+                        {
+                            tep3.setPosition(vilen.getPosition().x+11,vilen.getPosition().y+20);
+                            window.draw(tep3);
+                        }
+                        if(aguntime1 > 0.45 && aguntime1 <= 0.6)
+                        {
+                            tep4.setPosition(vilen.getPosition().x+11,vilen.getPosition().y+20);
+                            window.draw(tep4);
+                        }
+                        if(aguntime1 > 0.6)
+                            agunbool1=false;
+                    }
+
+                    if(life==0 || dekha || mgzn ==0)
+                    {
+
+                         window.clear(Color::White);
+                        if(dekhi < 100)
+                        {
+                            life=-1;
+                            dekha=true;
+                            dekhi++;
+                        }
+                        else
+                        {
+                            dekha = false;
+                            me=true;
+                            menu=true;
+                            gamemusic.stop();
+                            menumusic.play();
+                            menumusic.setLoop(true);
+                        }
+
+                        window.draw(gameovertxt);
+                    }
+                    if((jan==0 || dekha) && life !=-1)
+                    {
+                         window.clear(Color::White);
+                        if(dekhi < 1000)
+                        {
+                            jan--;
+                            dekha=true;
+                            dekhi++;
+                        }
+                        else
+                        {
+                            dekha = false;
+                            me=true;
+                            menu=true;
+                            gamemusic.stop();
+                            menumusic.play();
+                            menumusic.setLoop(true);
+                        }
+                        window.draw(gameovertxt);
+                        window.draw(welcometxt);
+                    }
                     window.display();
                 }
 
